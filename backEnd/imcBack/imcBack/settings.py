@@ -37,6 +37,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Add your frontend URL here
 ]
 
+
+
+
 # Application definition
 
 INSTALLED_APPS = [

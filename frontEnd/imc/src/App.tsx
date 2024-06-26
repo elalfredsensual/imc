@@ -3,25 +3,17 @@ import MainPage from './components/layouts/mainPage'
 
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 
 import Quote from './components/pages/Quote';
 import Partners from './components/pages/Partner';
 import HelloWorld from './components/pages/HelloWorld';
-
+import LoginForm from './components/pages/LoginForm';
 
 function App() {
 
   return (
     <>
-    <header>
-      <SignedOut>
-        <SignInButton />
-      </SignedOut>
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
-    </header>
+    <LoginForm />
      <MainPage>
       <p>Aqui van los componentes Quote y Partner!! (debo sacarlos del header y dejar solo los botones)</p>
       <Router>
