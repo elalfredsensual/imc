@@ -1,0 +1,29 @@
+.nav {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .nav-link {
+    margin: 0 10px;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: black; /* Always black font */
+    border: 1px solid #e7e7e7;
+    border-radius: 4px;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .nav-link:hover {
+    background-color: #e7e7e7;
+    color: green; /* Green text on hover */
+  }
+  
+  .nav-link.active {
+    border-color: green; /* Light elegant green border when selected */
+    color: green; /* Always black font */
+  }
+  

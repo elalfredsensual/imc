@@ -1,8 +1,30 @@
-//create a button component wich recieves a text and a function to execute when clicked
-const Button = ({text, onClick}: {text: string, onClick: () => void}) => {
-    return (
-        <button onClick={onClick}>{text}</button>
-    )
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import './Button.css'; // Import styles for the button
+
+interface ButtonProps {
+  text: string;
+  to: string;
+  onClick?: () => void;
 }
 
-export { Button }
+const Button: React.FC<ButtonProps> = ({ text, to, onClick }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isActive = location.pathname === to;
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    }
+    navigate(to);
+  };
+
+  return (
+    <button onClick={handleClick} className={`nav-button ${isActive ? 'active' : ''}`}>
+      {text}
+    </button>
+  );
+};
+
+export { Button };

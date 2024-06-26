@@ -1,33 +1,42 @@
-import './App.css'
-import MainPage from './components/layouts/mainPage'
-
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-
-
-import Quote from './components/pages/Quote';
-import Partners from './components/pages/Partner';
-import HelloWorld from './components/pages/HelloWorld';
+import React, { useState, useEffect } from 'react';
+import './App.css';
+import { BrowserRouter as Router } from 'react-router-dom';
 import LoginForm from './components/pages/LoginForm';
+import LoggedInApp from './components/pages/LoggedInApp';
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState<{ email: string; userType: string } | null>(null);
+
+  useEffect(() => {
+    const storedUserInfo = localStorage.getItem('userInfo');
+    if (storedUserInfo) {
+      setUserInfo(JSON.parse(storedUserInfo));
+      setLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogin = (userData: { email: string; userType: string }) => {
+    setLoggedIn(true);
+    setUserInfo(userData);
+    localStorage.setItem('userInfo', JSON.stringify(userData));
+  };
+
+  const handleLogout = () => {
+    setLoggedIn(false);
+    setUserInfo(null);
+    localStorage.removeItem('userInfo');
+  };
 
   return (
-    <>
-    <LoginForm />
-     <MainPage>
-      <p>Aqui van los componentes Quote y Partner!! (debo sacarlos del header y dejar solo los botones)</p>
-      <Router>
-        <div>
-          <Routes>
-              <Route path="/" Component={HelloWorld} />
-              <Route path="/quote" element={<Quote />} />
-              <Route path="/partners" element={<Partners />} />
-          </Routes>
-        </div>
-      </Router>
-    </MainPage> 
-    </>
-  )
+    <Router>
+      {!loggedIn ? (
+        <LoginForm onLogin={handleLogin} />
+      ) : (
+        <LoggedInApp handleLogout={handleLogout} userInfo={userInfo} />
+      )}
+    </Router>
+  );
 }
 
-export default App
+export default App;

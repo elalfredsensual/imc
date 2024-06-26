@@ -40,3 +40,14 @@
 .read-the-docs {
   color: #888;
 }
+
+.logged-in-info {
+  padding: 10px;
+  background-color: #f1f1f1;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.logged-in-info button {
+  margin-left: 10px;
+}

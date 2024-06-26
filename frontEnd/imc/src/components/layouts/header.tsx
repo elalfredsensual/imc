@@ -1,14 +1,20 @@
-import { Button } from '../common/Button';
+import { NavLink } from 'react-router-dom';
+import './Header.css'; // Assuming you have some styles for the header
 
 function Header() {
-  
-    return (
-      <>
-        <Button text="Quote" onClick={() => { window.location.href = "/quote"; }}></Button>
-        <Button text="Partners" onClick={() => { window.location.href = "/partners"; }}></Button>
+  return (
+    <>
+      <p>Data Loader for IMC Storage. Please select which data you would like to upload.</p>
+      <nav className="nav">
+        <NavLink to="/quote" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+          Quote
+        </NavLink>
+        <NavLink to="/partners" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+          Partners
+        </NavLink>
+      </nav>
+    </>
+  );
+}
 
-      </>
-    )
-  }
-  
-  export default Header
+export default Header;
