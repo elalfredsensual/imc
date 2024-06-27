@@ -1,9 +1,8 @@
-# Create your views here.
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-# for bq 
+# for BigQuery
 from google.cloud import bigquery
 import os
 from django.http import JsonResponse, HttpResponseBadRequest
@@ -15,7 +14,11 @@ from django.contrib.auth.models import User
 import json
 import bcrypt
 
-
+# for file upload
+from django.conf import settings
+from django.core.files.storage import default_storage
+import subprocess
+from pathlib import Path
 
 @api_view(['GET'])
 def hello_world(request):
@@ -84,3 +87,24 @@ def login_user(request):
             return JsonResponse({"status": "failure"}, status=401)
     except Exception as e:
         return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+
+@csrf_exempt
+def upload_quote_file(request):
+    if request.method == 'POST' and request.FILES.get('file'):
+        file = request.FILES['file']
+        file_path = default_storage.save(os.path.join(settings.MEDIA_ROOT, file.name), file)
+        absolute_file_path = os.path.join(settings.MEDIA_ROOT, file_path)
+        absolute_file_path = Path(absolute_file_path).resolve()
+
+        script_path = (Path(settings.BASE_DIR) / '../../../Scripts/data_cleaner/quote_cleaning_script.py').resolve()
+        venv_python = Path(settings.BASE_DIR) / 'imc-back-env' / 'Scripts' / 'python.exe'
+        venv_python = venv_python.resolve()
+
+        result = subprocess.run([str(venv_python), str(script_path), str(absolute_file_path)], capture_output=True, text=True)
+
+        if result.returncode == 0:
+            return JsonResponse({'status': 'success', 'message': 'File uploaded and processed successfully'})
+        else:
+            return JsonResponse({'status': 'error', 'message': result.stderr})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'})
