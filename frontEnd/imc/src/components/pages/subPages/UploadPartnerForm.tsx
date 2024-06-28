@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Form, Container, Row, Col } from 'react-bootstrap';
+import { Form, Button, Spinner, Container, Row, Col } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './UploadForm.css'; // Import custom CSS
+import './UploadForm.css'; // Reusing custom CSS
 
-interface UploadFormProps {
-  endpoint: string;
-  title: string;
-}
-
-const UploadForm: React.FC<UploadFormProps> = ({ endpoint, title }) => {
+const UploadPartnerForm = () => {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -31,7 +26,7 @@ const UploadForm: React.FC<UploadFormProps> = ({ endpoint, title }) => {
     setLoading(true);
 
     try {
-      const response = await axios.post(endpoint, formData, {
+      const response = await axios.post('http://localhost:8000/api/upload-partner/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -39,7 +34,6 @@ const UploadForm: React.FC<UploadFormProps> = ({ endpoint, title }) => {
 
       if (response.data.status === 'success') {
         toast.success('File uploaded and processed successfully.');
-        setFile(null);  // Clear the file input
       } else {
         toast.error('An error occurred while processing the file.');
       }
@@ -54,26 +48,25 @@ const UploadForm: React.FC<UploadFormProps> = ({ endpoint, title }) => {
     <Container>
       <ToastContainer />
       <Row className="justify-content-md-center">
-        <Col md="8">
-          <h2 className="text-center my-4">{title}</h2>
+        <Col md="6">
+          <h2 className="text-center my-4">Upload Partner File</h2>
           <Form onSubmit={handleSubmit} className="p-4 border rounded shadow-sm">
             <Form.Group controlId="formFile" className="mb-3">
-              <Form.Label className="file-upload-label">Select file to upload</Form.Label>
-              <div className="file-input-container">
-                <div className={`custom-file ${file ? 'file-selected' : 'file-not-selected'}`}>
-                  <input type="file" className="custom-file-input" onChange={handleFileChange} value="" /> {/* Clear file input */}
-                  <label className="custom-file-label">{file ? file.name : "Choose file"}</label>
-                </div>
-                {file && (
-                  <button 
-                    type="submit" 
-                    disabled={loading} 
-                    className={`upload-button ${loading ? 'loading' : ''}`}
-                  >
-                    {loading ? "Loading..." : "Upload"}
-                  </button>
-                )}
+              <Form.Label>Select file to upload</Form.Label>
+              <div className={`custom-file ${file ? 'file-selected' : 'file-not-selected'}`}>
+                <input type="file" className="custom-file-input" onChange={handleFileChange} />
+                <label className="custom-file-label">{file ? file.name : "Choose file"}</label>
               </div>
+              {file && (
+                <Button 
+                  variant="primary" 
+                  type="submit" 
+                  disabled={loading} 
+                  className="upload-button"
+                >
+                  {loading ? <Spinner animation="border" size="sm" /> : "Upload"}
+                </Button>
+              )}
             </Form.Group>
           </Form>
         </Col>
@@ -82,4 +75,4 @@ const UploadForm: React.FC<UploadFormProps> = ({ endpoint, title }) => {
   );
 };
 
-export default UploadForm;
+export default UploadPartnerForm;

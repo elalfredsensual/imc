@@ -21,7 +21,6 @@ const LoggedInApp: React.FC<LoggedInAppProps> = ({ handleLogout, userInfo }) => 
       <MainPage>
         <div>
           <Routes>
-            <Route path="/" element={<HelloWorld />} />
             <Route path="/quote" element={<Quote />} />
             <Route path="/partners" element={<Partners />} />
           </Routes>
