@@ -19,6 +19,13 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 import subprocess
 from pathlib import Path
+import pandas as pd
+
+
+
+# Configure logging
+import logging
+logging.basicConfig(level=logging.INFO)
 
 @api_view(['GET'])
 def hello_world(request):
@@ -93,42 +100,77 @@ def login_user(request):
 def upload_quote_file(request):
     if request.method == 'POST' and request.FILES.get('file'):
         file = request.FILES['file']
-        file_path = default_storage.save(os.path.join(settings.MEDIA_ROOT, file.name), file)
-        absolute_file_path = os.path.join(settings.MEDIA_ROOT, file_path)
-        absolute_file_path = Path(absolute_file_path).resolve()
+        logging.info("File received: %s", file.name)
+        
+        try:
+            file_path = default_storage.save(os.path.join(settings.MEDIA_ROOT, file.name), file)
+            absolute_file_path = os.path.join(settings.MEDIA_ROOT, file_path)
+            absolute_file_path = Path(absolute_file_path).resolve()
+            logging.info("File saved to: %s", absolute_file_path)
 
-        script_path = (Path(settings.BASE_DIR) / '../../../Scripts/data_cleaner/quote_cleaning_script.py').resolve()
-        venv_python = Path(settings.BASE_DIR) / 'imc-back-env' / 'Scripts' / 'python.exe'
-        venv_python = venv_python.resolve()
+            # Use the full script path
+            script_path = Path(r'C:\Users\alfre\OneDrive\Documents\Trabajo\IMC\Proyecto IMC\Scripts\data_cleaner\quote_cleaning_script.py')
+            logging.info("Script path: %s", script_path)
+            
+            # Construct the path to the Python interpreter in the virtual environment
+            venv_python = Path(settings.BASE_DIR) / 'imc-back-env' / 'Scripts' / 'python.exe'
+            venv_python = venv_python.resolve()
+            logging.info("Python interpreter path: %s", venv_python)
 
-        result = subprocess.run([str(venv_python), str(script_path), str(absolute_file_path)], capture_output=True, text=True)
+            logging.info("Running script: %s with Python interpreter: %s", script_path, venv_python)
+            result = subprocess.run([str(venv_python), str(script_path), str(absolute_file_path)], capture_output=True, text=True)
 
-        if result.returncode == 0:
-            return JsonResponse({'status': 'success', 'message': 'File uploaded and processed successfully'})
-        else:
-            return JsonResponse({'status': 'error', 'message': result.stderr})
-    return JsonResponse({'status': 'error', 'message': 'Invalid request'})
+            if result.returncode == 0:
+                logging.info("Script executed successfully")
+                return JsonResponse({'status': 'success', 'message': 'File uploaded and processed successfully'})
+            else:
+                logging.error("Script execution failed: %s", result.stderr)
+                return JsonResponse({'status': 'error', 'message': result.stderr})
+        except Exception as e:
+            logging.error("Exception occurred: %s", str(e))
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    else:
+        logging.error("Invalid request: method=%s, files=%s", request.method, request.FILES)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 
 @csrf_exempt
 def upload_partner_file(request):
     if request.method == 'POST' and request.FILES.get('file'):
         file = request.FILES['file']
-        file_path = default_storage.save(os.path.join(settings.MEDIA_ROOT, file.name), file)
-        absolute_file_path = os.path.join(settings.MEDIA_ROOT, file_path)
-        absolute_file_path = Path(absolute_file_path).resolve()
+        logging.info("File received: %s", file.name)
+        
+        try:
+            file_path = default_storage.save(os.path.join(settings.MEDIA_ROOT, file.name), file)
+            absolute_file_path = os.path.join(settings.MEDIA_ROOT, file_path)
+            absolute_file_path = Path(absolute_file_path).resolve()
+            logging.info("File saved to: %s", absolute_file_path)
 
-        script_path = (Path(settings.BASE_DIR) / '../../../Scripts/data_cleaner/partner_cleaning_script.py').resolve()
-        venv_python = Path(settings.BASE_DIR) / 'imc-back-env' / 'Scripts' / 'python.exe'
-        venv_python = venv_python.resolve()
+            # Correct the script path based on the actual structure
+            script_path = Path(r'C:\Users\alfre\OneDrive\Documents\Trabajo\IMC\Proyecto IMC\Scripts\data_cleaner\partner_cleaning_script.py')
+            logging.info("Script path: %s", script_path)
+            venv_python = Path(settings.BASE_DIR) / 'imc-back-env' / 'Scripts' / 'python.exe'
+            venv_python = venv_python.resolve()
+            logging.info("Python interpreter path: %s", venv_python)
 
-        result = subprocess.run([str(venv_python), str(script_path), str(absolute_file_path)], capture_output=True, text=True)
+            logging.info("Running script: %s with Python interpreter: %s", script_path, venv_python)
+            result = subprocess.run([str(venv_python), str(script_path), str(absolute_file_path)], capture_output=True, text=True)
 
-        if result.returncode == 0:
-            return JsonResponse({'status': 'success', 'message': 'File uploaded and processed successfully'})
-        else:
-            return JsonResponse({'status': 'error', 'message': result.stderr})
-    return JsonResponse({'status': 'error', 'message': 'Invalid request'})
+            if result.returncode == 0:
+                logging.info("Script executed successfully")
+                return JsonResponse({'status': 'success', 'message': 'File uploaded and processed successfully'})
+            else:
+                logging.error("Script execution failed: %s", result.stderr)
+                return JsonResponse({'status': 'error', 'message': result.stderr})
+        except Exception as e:
+            logging.error("Exception occurred: %s", str(e))
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    else:
+        logging.error("Invalid request: method=%s, files=%s", request.method, request.FILES)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
 
 def get_last_10_quotes(request):
@@ -147,7 +189,6 @@ def get_last_10_quotes(request):
     rows = [dict(row) for row in results]
 
     return JsonResponse(rows, safe=False)
-
 
 @api_view(['GET'])
 def get_last_10_partners(request):
