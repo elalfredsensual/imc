@@ -109,7 +109,7 @@ def upload_quote_file(request):
             logging.info("File saved to: %s", absolute_file_path)
 
             # Use the full script path
-            script_path = Path(r'C:\Users\alfre\OneDrive\Documents\Trabajo\IMC\Proyecto IMC\Scripts\data_cleaner\quote_cleaning_script.py')
+            script_path = Path('/root/IMC/Proyecto IMC/Scripts/data_cleaner/quote_cleaning_script.py')
             logging.info("Script path: %s", script_path)
             
             # Construct the path to the Python interpreter in the virtual environment
@@ -150,7 +150,7 @@ def upload_partner_file(request):
             logging.info("File saved to: %s", absolute_file_path)
 
             # Correct the script path based on the actual structure
-            script_path = Path(r'C:\Users\alfre\OneDrive\Documents\Trabajo\IMC\Proyecto IMC\Scripts\data_cleaner\partner_cleaning_script.py')
+            script_path = Path('/root/IMC/Proyecto IMC/Scripts/data_cleaner/partner_cleaning_script.py')
             logging.info("Script path: %s", script_path)
             venv_python = Path(settings.BASE_DIR) / 'imc-back-env' / 'Scripts' / 'python.exe'
             venv_python = venv_python.resolve()

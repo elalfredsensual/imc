@@ -27,7 +27,7 @@ MEDIA_URL = '/media/'
 
 
 # Set the environment variable for the Google application credentials
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'C:\Users\alfre\OneDrive\Documents\Trabajo\IMC\Proyecto IMC\Keys\bigquery_credentials\imc-storage-8d7171341a07.json'
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/root/IMC/Proyecto IMC/Keys/bigquery_credentials/imc-storage-8d7171341a07.json'
 
 # Path to your service account key file
 KEY_PATH = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
