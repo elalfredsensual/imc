@@ -17,7 +17,7 @@ from google.oauth2 import service_account
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Print the BASE_DIR for verification
-print(f"BASE_DIR is set to: {BASE_DIR}")
+#print(f"BASE_DIR is set to: {BASE_DIR}")
 
 # Other settings...
 
