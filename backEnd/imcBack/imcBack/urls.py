@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('imcAPI.urls'))
+    path('api/', include('imcAPI.urls')),  # Ensure this correctly includes imcAPI's URLs
 ]
