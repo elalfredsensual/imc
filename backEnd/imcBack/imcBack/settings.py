@@ -45,12 +45,12 @@ BIGQUERY_CREDENTIALS = service_account.Credentials.from_service_account_file(KEY
 # SECURITY WARNING: keep the secret key used in production secret!
 from decouple import config
 
-SECRET_KEY = config('DJANGO_SECRET_KEY')
+SECRET_KEY = 'django-insecure-(86hnkxihu)*+qxbf)%)49n-mjn8zf#1-2x+2khhcwu7r0v@ea'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['134.209.208.34']
+ALLOWED_HOSTS = ['157.245.242.171']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Add your frontend URL here
