@@ -53,7 +53,7 @@ DEBUG = False
 ALLOWED_HOSTS = ['157.245.242.171']
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Add your frontend URL here
+    "http://http://157.245.242.171:5173",  # Add your frontend URL here
 ]
 
 
