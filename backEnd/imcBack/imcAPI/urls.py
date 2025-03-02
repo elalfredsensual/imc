@@ -1,7 +1,12 @@
+from django.http import JsonResponse
 from django.urls import path
 from . import views
 
+def home_view(request):
+    return JsonResponse({"message": "Welcome to the API!"})
+
 urlpatterns = [
+    path('', home_view, name='home'),  # This ensures `/` works
     path('hello-world/', views.hello_world, name='hello_world'),
     path('get-bigquery-table/', views.get_bigquery_table, name='get_bigquery_table'),
     path('login/', views.login_user, name='login_user'),
