@@ -25,7 +25,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/api/login/',
+        'http://157.245.242.171/api/login/',
         { email, password },
         {
           headers: {

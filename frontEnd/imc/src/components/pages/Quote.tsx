@@ -5,7 +5,7 @@ import Last10Quotes from './subPages/Last10Quotes';
 const Quote = () => {
   return (
     <div className="quote-page">
-      <UploadForm endpoint="http://localhost:8000/api/upload-quote/" title="Upload Quote File" />
+      <UploadForm endpoint="http://157.245.242.171/api/upload-quote/" title="Upload Quote File" />
       <Last10Quotes />
     </div>
   );

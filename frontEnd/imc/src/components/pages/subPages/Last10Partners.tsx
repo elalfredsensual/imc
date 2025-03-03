@@ -17,7 +17,7 @@ const Last10Partners = () => {
   useEffect(() => {
     const fetchPartners = async () => {
       try {
-        const response = await axios.get<Partner[]>('http://localhost:8000/api/get-last-10-partners/');
+        const response = await axios.get<Partner[]>('http://157.245.242.171/api/get-last-10-partners/');
         setPartners(response.data);
       } catch (err) {
         toast.error('Failed to fetch partners');

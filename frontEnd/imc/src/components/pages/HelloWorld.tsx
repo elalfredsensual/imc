@@ -9,7 +9,7 @@ const HelloWorld: React.FC = () => {
   const [message, setMessage] = useState<string>('');
 
   useEffect(() => {
-    axios.get<HelloWorldResponse>('http://localhost:8000/api/hello-world/')
+    axios.get<HelloWorldResponse>('http://157.245.242.171/api/hello-world/')
       .then(response => {
         setMessage(response.data.message);
       })

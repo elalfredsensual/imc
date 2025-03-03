@@ -23,7 +23,7 @@ const Last10Quotes: React.FC = () => {
   useEffect(() => {
     const fetchQuotes = async () => {
       try {
-        const response = await axios.get<Quote[]>('http://localhost:8000/api/get-last-10-quotes/');
+        const response = await axios.get<Quote[]>('http://157.245.242.171/api/get-last-10-quotes/');
         setQuotes(response.data);
       } catch (err) {
         toast.error('Failed to fetch quotes');
