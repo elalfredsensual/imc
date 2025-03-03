@@ -138,10 +138,11 @@ def upload_quote_file(request):
 
             # Run script and capture logs
             # Corrected subprocess call to activate the virtual environment
+            venv_path = "/root/IMC/Proyecto IMC/Web App/imc/backEnd/imcBack/imc-back-env"
             result = subprocess.run(
-                f"source /root/imc_venv/bin/activate && python {script_path} {absolute_file_path}",
+                f"source {venv_path}/bin/activate && python {script_path} {absolute_file_path}",
                 capture_output=True, text=True, shell=True, executable="/bin/bash"
-)
+            )
 
 
             log.write(f"Subprocess return code: {result.returncode}\n")
