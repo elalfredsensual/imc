@@ -123,7 +123,7 @@ def upload_quote_file(request):
             log.write(f"Script path is set to: {script_path}\n")
 
             # Get virtual environment's Python
-            venv_python = Path(settings.BASE_DIR).parent / 'imc-back-env' / 'bin' / 'python'
+            venv_python = Path("/root/IMC/Proyecto IMC/Web App/imc/backEnd/imcBack/imc-back-env/bin/python").resolve()
             venv_python = venv_python.resolve()
             log.write(f"Using Python interpreter at: {venv_python}\n")
 
