@@ -118,7 +118,7 @@ def upload_quote_file(request):
             log.write(f"File saved at {absolute_file_path}\n")
 
             # Set script path
-            script_path = Path(settings.BASE_DIR).parent.parent / 'Scripts' / 'data_cleaner' / 'quote_cleaning_script.py'
+            script_path = Path("/root/IMC/Proyecto IMC/Scripts/data_cleaner/quote_cleaning_script.py").resolve()
             script_path = script_path.resolve()
             log.write(f"Script path is set to: {script_path}\n")
 
