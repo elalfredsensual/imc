@@ -137,10 +137,12 @@ def upload_quote_file(request):
                 return JsonResponse({'status': 'error', 'message': f"Python interpreter not found: {venv_python}"})
 
             # Run script and capture logs
+            # Corrected subprocess call to activate the virtual environment
             result = subprocess.run(
-                [str(venv_python), str(script_path), str(absolute_file_path)], 
-                capture_output=True, text=True
-            )
+                f"source /root/imc_venv/bin/activate && python {script_path} {absolute_file_path}",
+                capture_output=True, text=True, shell=True, executable="/bin/bash"
+)
+
 
             log.write(f"Subprocess return code: {result.returncode}\n")
             log.write(f"Subprocess stdout: {result.stdout}\n")
