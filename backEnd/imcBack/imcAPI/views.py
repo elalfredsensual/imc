@@ -115,7 +115,7 @@ def upload_quote_file(request):
             script_path = Path('/root/IMC/Proyecto IMC/Scripts/data_cleaner/quote_cleaning_script.py').resolve()
             logging.info("Script path: %s", script_path)
 
-            # Use the virtual environment's Python interpreter directly
+            # ✅ Use the virtual environment's Python interpreter directly
             venv_python = Path('/root/imc_project/imc-back-env/bin/python').resolve()
             logging.info("Python interpreter path: %s", venv_python)
 
@@ -139,7 +139,8 @@ def upload_quote_file(request):
     else:
         logging.error("Invalid request: method=%s, files=%s", request.method, request.FILES)
         return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
-# Configure logging
+
+#  Configure logging
 logging.basicConfig(level=logging.INFO)
 
 @csrf_exempt
