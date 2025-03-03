@@ -63,6 +63,8 @@ ALLOWED_HOSTS = [
     '157.245.242.171',
     'localhost',
     '127.0.0.1',
+    'api.ipify.org',
+    'www.shadowserver.org',
     ]
 
 CORS_ALLOWED_ORIGINS = [
