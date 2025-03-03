@@ -21,6 +21,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Other settings...
 
+
+# for debugging python path
+import sys
+import logging
+
+logging.info(f"Current Python path: {sys.executable}")
+
+## end of debugging
+
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
