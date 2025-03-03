@@ -101,64 +101,49 @@ def login_user(request):
 
 @csrf_exempt
 def upload_quote_file(request):
+    print("Received request for file upload")
+    
     if request.method == 'POST' and request.FILES.get('file'):
+        print("File received")
         file = request.FILES['file']
-        import sys
-        import logging
+        
+        # Save file to MEDIA_ROOT
+        file_path = os.path.join(settings.MEDIA_ROOT, file.name)
+        absolute_file_path = default_storage.save(file_path, file)
+        absolute_file_path = Path(absolute_file_path).resolve()
+        print(f"File saved at {absolute_file_path}")
 
-        logging.info(f"Django is running with Python: {sys.executable}")
+        # Adjust the script path (now absolute on the server)
+        script_path = Path(settings.BASE_DIR).parent.parent / 'Scripts' / 'data_cleaner' / 'quote_cleaning_script.py'
+        script_path = script_path.resolve()
+        print(f"Script path is set to: {script_path}")
 
-        logging.info("File received: %s", file.name)
+        # Get the Python interpreter from the server's virtual environment
+        venv_python = Path(settings.BASE_DIR).parent / 'imc-back-env' / 'bin' / 'python'
+        venv_python = venv_python.resolve()
+        print(f"Using Python interpreter at: {venv_python}")
 
-        try:
-            # Save file to MEDIA_ROOT
-            file_path = default_storage.save(os.path.join(settings.MEDIA_ROOT, file.name), file)
-            absolute_file_path = Path(settings.MEDIA_ROOT) / file_path
-            logging.info("File saved to: %s", absolute_file_path)
+        # Ensure paths exist before execution
+        if not script_path.exists():
+            return JsonResponse({'status': 'error', 'message': f"Script not found: {script_path}"})
 
-            # Define paths
-            script_path = Path('/root/IMC/Proyecto IMC/Scripts/data_cleaner/quote_cleaning_script.py').resolve()
-            logging.info("Script path: %s", script_path)
+        if not venv_python.exists():
+            return JsonResponse({'status': 'error', 'message': f"Python interpreter not found: {venv_python}"})
 
-            # ✅ Use the virtual environment's Python interpreter directly
-            venv_python = Path('/root/imc_project/imc-back-env/bin/python').resolve()
-            logging.info("Python interpreter path: %s", venv_python)
+        # Run the cleaning script using the virtual environment's Python interpreter
+        result = subprocess.run(
+            [str(venv_python), str(script_path), str(absolute_file_path)], 
+            capture_output=True, text=True
+        )
 
-            # ✅ Explicitly activate the virtual environment before running the script
-            command = [
-                str(venv_python),
-                str(script_path),
-                str(absolute_file_path)
-            ]
-            logging.info("Running command: %s", " ".join(command))
+        print(f"Subprocess result: {result}")
 
-            # ✅ Ensure the script runs inside the virtual environment
-            result = subprocess.run(
-                command,
-                env={
-                    **os.environ,
-                    "PATH": "/root/imc_project/imc-back-env/bin:" + os.environ["PATH"],
-                    "VIRTUAL_ENV": "/root/imc_project/imc-back-env",
-                },
-                capture_output=True,
-                text=True,
-            )
+        if result.returncode == 0:
+            return JsonResponse({'status': 'success', 'message': 'File uploaded and processed successfully'})
+        else:
+            return JsonResponse({'status': 'error', 'message': result.stderr})
 
-            if result.returncode == 0:
-                logging.info("Script executed successfully: %s", result.stdout)
-                return JsonResponse({'status': 'success', 'message': 'File uploaded and processed successfully'})
-            else:
-                logging.error("Script execution failed: %s", result.stderr)
-                return JsonResponse({'status': 'error', 'message': result.stderr})
-
-        except Exception as e:
-            logging.error("Exception occurred: %s", str(e))
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-
-    else:
-        logging.error("Invalid request: method=%s, files=%s", request.method, request.FILES)
-        return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
-
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'})
 
 #  Configure logging
 logging.basicConfig(level=logging.INFO)
