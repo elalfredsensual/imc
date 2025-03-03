@@ -104,7 +104,7 @@ def upload_quote_file(request):
     if request.method == 'POST' and request.FILES.get('file'):
         file = request.FILES['file']
         logging.info("File received: %s", file.name)
-
+        
         try:
             # Save file to MEDIA_ROOT
             file_path = default_storage.save(os.path.join(settings.MEDIA_ROOT, file.name), file)
@@ -147,6 +147,10 @@ logging.basicConfig(level=logging.INFO)
 def upload_partner_file(request):
     if request.method == 'POST' and request.FILES.get('file'):
         file = request.FILES['file']
+        import sys
+
+        logging.info(f"Django is running with Python: {sys.executable}")
+
         logging.info("File received: %s", file.name)
         
         try:
