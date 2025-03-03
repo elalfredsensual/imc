@@ -111,20 +111,19 @@ def upload_quote_file(request):
             absolute_file_path = Path(settings.MEDIA_ROOT) / file_path
             logging.info("File saved to: %s", absolute_file_path)
 
-            # Script path (fixing space issue)
+            # Define paths
             script_path = Path('/root/IMC/Proyecto IMC/Scripts/data_cleaner/quote_cleaning_script.py').resolve()
             logging.info("Script path: %s", script_path)
 
-            # Correct Virtual Environment Python Path
-            venv_python = Path('/root/IMC/Proyecto IMC/Web App/imc/backEnd/imcBack/imc-back-env/bin/python3').resolve()
+            # Use the virtual environment's Python interpreter directly
+            venv_python = Path('/root/imc_project/imc-back-env/bin/python').resolve()
             logging.info("Python interpreter path: %s", venv_python)
 
-            # Construct command safely with shlex.quote()
-            command = f"source {shlex.quote(str(venv_python.parent.parent / 'bin' / 'activate'))} && {shlex.quote(str(venv_python))} {shlex.quote(str(script_path))} {shlex.quote(str(absolute_file_path))}"
-            logging.info("Running command: %s", command)
+            # Run the script with subprocess
+            command = [str(venv_python), str(script_path), str(absolute_file_path)]
+            logging.info("Running command: %s", " ".join(command))
 
-            # Run the script inside the virtual environment
-            result = subprocess.run(command, shell=True, capture_output=True, text=True, executable="/bin/bash")
+            result = subprocess.run(command, capture_output=True, text=True)
 
             if result.returncode == 0:
                 logging.info("Script executed successfully: %s", result.stdout)
@@ -132,6 +131,7 @@ def upload_quote_file(request):
             else:
                 logging.error("Script execution failed: %s", result.stderr)
                 return JsonResponse({'status': 'error', 'message': result.stderr})
+
         except Exception as e:
             logging.error("Exception occurred: %s", str(e))
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
@@ -139,7 +139,6 @@ def upload_quote_file(request):
     else:
         logging.error("Invalid request: method=%s, files=%s", request.method, request.FILES)
         return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
-
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
