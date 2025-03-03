@@ -113,7 +113,7 @@ def upload_quote_file(request):
             logging.info("Script path: %s", script_path)
             
             # Construct the path to the Python interpreter in the virtual environment
-            venv_python = Path(settings.BASE_DIR) / 'imc-back-env' / 'bin' / 'python'
+            venv_python = Path('/root/IMC/Proyecto IMC/Web App/imc/backEnd/imcBack/imc-back-env/bin/python3')
             venv_python = venv_python.resolve()
             logging.info("Python interpreter path: %s", venv_python)
 
@@ -152,7 +152,7 @@ def upload_partner_file(request):
             # Correct the script path based on the actual structure
             script_path = Path('/root/IMC/Proyecto IMC/Scripts/data_cleaner/partner_cleaning_script.py')
             logging.info("Script path: %s", script_path)
-            venv_python = Path(settings.BASE_DIR) / 'imc-back-env' / 'bin' / 'python'
+            venv_python = Path('/root/IMC/Proyecto IMC/Web App/imc/backEnd/imcBack/imc-back-env/bin/python3')
             venv_python = venv_python.resolve()
             logging.info("Python interpreter path: %s", venv_python)
 
