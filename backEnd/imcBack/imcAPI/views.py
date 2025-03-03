@@ -101,27 +101,30 @@ def upload_quote_file(request):
     if request.method == 'POST' and request.FILES.get('file'):
         file = request.FILES['file']
         logging.info("File received: %s", file.name)
-        
+
         try:
+            # Save file to MEDIA_ROOT
             file_path = default_storage.save(os.path.join(settings.MEDIA_ROOT, file.name), file)
-            absolute_file_path = os.path.join(settings.MEDIA_ROOT, file_path)
-            absolute_file_path = Path(absolute_file_path).resolve()
+            absolute_file_path = Path(settings.MEDIA_ROOT) / file_path
             logging.info("File saved to: %s", absolute_file_path)
 
-            # Use the full script path
-            script_path = Path('/root/IMC/Proyecto IMC/Scripts/data_cleaner/quote_cleaning_script.py')
+            # Script path (fixing space issue)
+            script_path = Path('/root/IMC/Proyecto IMC/Scripts/data_cleaner/quote_cleaning_script.py').resolve()
             logging.info("Script path: %s", script_path)
-            
-            # Construct the path to the Python interpreter in the virtual environment
-            venv_python = Path('/root/IMC/Proyecto IMC/Web App/imc/backEnd/imcBack/imc-back-env/bin/python3')
-            venv_python = venv_python.resolve()
+
+            # Correct Virtual Environment Python Path
+            venv_python = Path('/root/IMC/Proyecto IMC/Web App/imc/backEnd/imcBack/imc-back-env/bin/python3').resolve()
             logging.info("Python interpreter path: %s", venv_python)
 
-            logging.info("Running script: %s with Python interpreter: %s", script_path, venv_python)
-            result = subprocess.run([str(venv_python), str(script_path), str(absolute_file_path)], capture_output=True, text=True)
+            # Construct command safely with shlex.quote()
+            command = f"source {shlex.quote(str(venv_python.parent.parent / 'bin' / 'activate'))} && {shlex.quote(str(venv_python))} {shlex.quote(str(script_path))} {shlex.quote(str(absolute_file_path))}"
+            logging.info("Running command: %s", command)
+
+            # Run the script inside the virtual environment
+            result = subprocess.run(command, shell=True, capture_output=True, text=True, executable="/bin/bash")
 
             if result.returncode == 0:
-                logging.info("Script executed successfully")
+                logging.info("Script executed successfully: %s", result.stdout)
                 return JsonResponse({'status': 'success', 'message': 'File uploaded and processed successfully'})
             else:
                 logging.error("Script execution failed: %s", result.stderr)
@@ -129,10 +132,10 @@ def upload_quote_file(request):
         except Exception as e:
             logging.error("Exception occurred: %s", str(e))
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
     else:
         logging.error("Invalid request: method=%s, files=%s", request.method, request.FILES)
-    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
-
+        return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
