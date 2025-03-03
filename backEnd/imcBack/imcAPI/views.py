@@ -103,6 +103,11 @@ def login_user(request):
 def upload_quote_file(request):
     if request.method == 'POST' and request.FILES.get('file'):
         file = request.FILES['file']
+        import sys
+        import logging
+
+        logging.info(f"Django is running with Python: {sys.executable}")
+
         logging.info("File received: %s", file.name)
 
         try:
