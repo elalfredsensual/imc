@@ -101,49 +101,58 @@ def login_user(request):
 
 @csrf_exempt
 def upload_quote_file(request):
-    print("Received request for file upload")
+    log_file = Path(settings.BASE_DIR) / "upload_debug.log"
     
-    if request.method == 'POST' and request.FILES.get('file'):
-        print("File received")
-        file = request.FILES['file']
-        
-        # Save file to MEDIA_ROOT
-        file_path = os.path.join(settings.MEDIA_ROOT, file.name)
-        absolute_file_path = default_storage.save(file_path, file)
-        absolute_file_path = Path(absolute_file_path).resolve()
-        print(f"File saved at {absolute_file_path}")
+    with open(log_file, "a") as log:
+        log.write("\n===== File Upload Attempt =====\n")
+        log.write("Received request for file upload\n")
 
-        # Adjust the script path (now absolute on the server)
-        script_path = Path(settings.BASE_DIR).parent.parent / 'Scripts' / 'data_cleaner' / 'quote_cleaning_script.py'
-        script_path = script_path.resolve()
-        print(f"Script path is set to: {script_path}")
+        if request.method == 'POST' and request.FILES.get('file'):
+            log.write("File received\n")
+            file = request.FILES['file']
+            
+            # Save file
+            file_path = os.path.join(settings.MEDIA_ROOT, file.name)
+            absolute_file_path = default_storage.save(file_path, file)
+            absolute_file_path = Path(absolute_file_path).resolve()
+            log.write(f"File saved at {absolute_file_path}\n")
 
-        # Get the Python interpreter from the server's virtual environment
-        venv_python = Path(settings.BASE_DIR).parent / 'imc-back-env' / 'bin' / 'python'
-        venv_python = venv_python.resolve()
-        print(f"Using Python interpreter at: {venv_python}")
+            # Set script path
+            script_path = Path(settings.BASE_DIR).parent.parent / 'Scripts' / 'data_cleaner' / 'quote_cleaning_script.py'
+            script_path = script_path.resolve()
+            log.write(f"Script path is set to: {script_path}\n")
 
-        # Ensure paths exist before execution
-        if not script_path.exists():
-            return JsonResponse({'status': 'error', 'message': f"Script not found: {script_path}"})
+            # Get virtual environment's Python
+            venv_python = Path(settings.BASE_DIR).parent / 'imc-back-env' / 'bin' / 'python'
+            venv_python = venv_python.resolve()
+            log.write(f"Using Python interpreter at: {venv_python}\n")
 
-        if not venv_python.exists():
-            return JsonResponse({'status': 'error', 'message': f"Python interpreter not found: {venv_python}"})
+            # Check existence before executing
+            if not script_path.exists():
+                log.write(f"Error: Script not found at {script_path}\n")
+                return JsonResponse({'status': 'error', 'message': f"Script not found: {script_path}"})
 
-        # Run the cleaning script using the virtual environment's Python interpreter
-        result = subprocess.run(
-            [str(venv_python), str(script_path), str(absolute_file_path)], 
-            capture_output=True, text=True
-        )
+            if not venv_python.exists():
+                log.write(f"Error: Python interpreter not found at {venv_python}\n")
+                return JsonResponse({'status': 'error', 'message': f"Python interpreter not found: {venv_python}"})
 
-        print(f"Subprocess result: {result}")
+            # Run script and capture logs
+            result = subprocess.run(
+                [str(venv_python), str(script_path), str(absolute_file_path)], 
+                capture_output=True, text=True
+            )
 
-        if result.returncode == 0:
-            return JsonResponse({'status': 'success', 'message': 'File uploaded and processed successfully'})
-        else:
-            return JsonResponse({'status': 'error', 'message': result.stderr})
+            log.write(f"Subprocess return code: {result.returncode}\n")
+            log.write(f"Subprocess stdout: {result.stdout}\n")
+            log.write(f"Subprocess stderr: {result.stderr}\n")
 
-    return JsonResponse({'status': 'error', 'message': 'Invalid request'})
+            if result.returncode == 0:
+                return JsonResponse({'status': 'success', 'message': 'File uploaded and processed successfully'})
+            else:
+                return JsonResponse({'status': 'error', 'message': result.stderr})
+
+        log.write("Invalid request\n")
+        return JsonResponse({'status': 'error', 'message': 'Invalid request'})
 
 #  Configure logging
 logging.basicConfig(level=logging.INFO)
