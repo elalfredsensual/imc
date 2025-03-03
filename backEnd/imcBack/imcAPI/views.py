@@ -104,7 +104,7 @@ def upload_quote_file(request):
     if request.method == 'POST' and request.FILES.get('file'):
         file = request.FILES['file']
         logging.info("File received: %s", file.name)
-        
+
         try:
             # Save file to MEDIA_ROOT
             file_path = default_storage.save(os.path.join(settings.MEDIA_ROOT, file.name), file)
@@ -119,11 +119,25 @@ def upload_quote_file(request):
             venv_python = Path('/root/imc_project/imc-back-env/bin/python').resolve()
             logging.info("Python interpreter path: %s", venv_python)
 
-            # Run the script with subprocess
-            command = [str(venv_python), str(script_path), str(absolute_file_path)]
+            # ✅ Explicitly activate the virtual environment before running the script
+            command = [
+                str(venv_python),
+                str(script_path),
+                str(absolute_file_path)
+            ]
             logging.info("Running command: %s", " ".join(command))
 
-            result = subprocess.run(command, capture_output=True, text=True)
+            # ✅ Ensure the script runs inside the virtual environment
+            result = subprocess.run(
+                command,
+                env={
+                    **os.environ,
+                    "PATH": "/root/imc_project/imc-back-env/bin:" + os.environ["PATH"],
+                    "VIRTUAL_ENV": "/root/imc_project/imc-back-env",
+                },
+                capture_output=True,
+                text=True,
+            )
 
             if result.returncode == 0:
                 logging.info("Script executed successfully: %s", result.stdout)
@@ -139,6 +153,7 @@ def upload_quote_file(request):
     else:
         logging.error("Invalid request: method=%s, files=%s", request.method, request.FILES)
         return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
 
 #  Configure logging
 logging.basicConfig(level=logging.INFO)
