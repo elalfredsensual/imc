@@ -38,7 +38,7 @@ const Last10Partners = () => {
       <div className="last-10-quotes">
         <ToastContainer />
         <h3 className="text-center my-4">Last 10 Partner Records</h3>
-        <Table className="pretty-table"> ## ESTA LINEA ES LA QUE SE ACTUALIZA
+        <Table className="pretty-table"> 
           <thead>
             <tr>
               <th>IMC PO</th>
