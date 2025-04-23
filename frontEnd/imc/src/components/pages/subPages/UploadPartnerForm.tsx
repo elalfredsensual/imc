@@ -26,7 +26,7 @@ const UploadPartnerForm = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://157.245.242.171/api/upload-partner/', formData, {
+      const response = await axios.post('http://localhost:8000/api/upload-partner/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

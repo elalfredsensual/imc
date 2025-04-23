@@ -17,7 +17,7 @@ const Last10Partners = () => {
   useEffect(() => {
     const fetchPartners = async () => {
       try {
-        const response = await axios.get<Partner[]>('http://157.245.242.171/api/get-last-10-partners/');
+        const response = await axios.get<Partner[]>('http://localhost:8000/api/get-last-10-partners/');
         setPartners(response.data);
       } catch (err) {
         toast.error('Failed to fetch partners');
@@ -38,7 +38,7 @@ const Last10Partners = () => {
     <div className="last-10-quotes">
       <ToastContainer />
       <h3 className="text-center my-4">Last 10 Partner Records</h3>
-      <Table striped bordered hover>
+      <Table className="pretty-table">
         <thead>
           <tr>
             <th>IMC PO</th>

@@ -39,7 +39,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 
 # Set the environment variable for the Google application credentials
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/root/IMC/Proyecto IMC/Keys/bigquery_credentials/imc-storage-8d7171341a07.json'
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'C:\Users\alfre\OneDrive\Documents\Trabajo\IMC\Proyecto IMC\Keys\bigquery_credentials\imc-storage-8d7171341a07.json'
 
 # Path to your service account key file
 KEY_PATH = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
@@ -60,7 +60,7 @@ SECRET_KEY = 'django-insecure-(86hnkxihu)*+qxbf)%)49n-mjn8zf#1-2x+2khhcwu7r0v@ea
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    '157.245.242.171',
+    'localhost',
     'localhost',
     '127.0.0.1',
     'api.ipify.org',
@@ -68,9 +68,9 @@ ALLOWED_HOSTS = [
     ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://157.245.242.171:5173",
-    "http://157.245.242.171",
-    "https://157.245.242.171"
+    "http://localhost:5173",
+    "http://localhost",
+    "https://localhost"
 ]
 
 

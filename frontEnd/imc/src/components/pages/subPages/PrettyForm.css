@@ -1,0 +1,59 @@
+.pretty-form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 40px auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .pretty-form h4 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .pretty-form .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .pretty-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .pretty-form input,
+  .pretty-form select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .pretty-form .form-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .pretty-form button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+  
+  .pretty-form button[type="submit"] {
+    background-color: #198754;
+    color: white;
+  }
+  
+  .pretty-form button[type="button"] {
+    background-color: #dc3545;
+    color: white;
+  }
+  

@@ -5,7 +5,7 @@ import Last10Partners from './subPages/Last10Partners';
 const Partners = () => {
   return (
     <div className="partners-page">
-      <UploadForm endpoint="http://157.245.242.171/api/upload-partner/" title="Upload Partner File" />
+      <UploadForm endpoint="http://localhost:8000/api/upload-partner/" title="Upload Partner File" />
       <Last10Partners />
     </div>
   );
