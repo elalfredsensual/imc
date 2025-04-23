@@ -17,7 +17,7 @@ const GetRebates = () => {
   useEffect(() => {
     const fetchRebates = async () => {
       try {
-        const response = await axios.get<Rebate[]>('http://localhost:8000/api/rebates/');
+        const response = await axios.get<Rebate[]>('http://157.245.242.171/api/rebates/');
         setRebates(response.data);
       } catch (err) {
         toast.error('Failed to fetch rebates');
