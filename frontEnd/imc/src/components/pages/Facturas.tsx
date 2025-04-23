@@ -6,7 +6,7 @@ const Facturas = () => {
   return (
     <div className="rebates-page">
       <div className="partners-page">
-      <UploadForm endpoint="http://157.245.242.171/api/upload-facturas/" title="Upload Partner File" />
+      <UploadForm endpoint="http://157.245.242.171/api/upload-facturas/" title="Upload Facturas File" />
       <Last10Facturas/>
       </div>
     </div>
