@@ -1,4 +1,3 @@
-## NEW COMPONENT
 import React from 'react';
 import GetRebates from './subPages/GetRebates';
 import RebatesForm from './subPages/RebatesForm';
