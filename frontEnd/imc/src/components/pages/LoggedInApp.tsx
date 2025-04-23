@@ -5,6 +5,7 @@ import Quote from './Quote';
 import Partners from './Partner';
 import HelloWorld from './HelloWorld';
 import Rebates from './Rebates';
+import Facturas from './Facturas';
 
 interface LoggedInAppProps {
   handleLogout: () => void;
@@ -24,6 +25,7 @@ const LoggedInApp: React.FC<LoggedInAppProps> = ({ handleLogout, userInfo }) => 
           <Routes>
             <Route path="/quote" element={<Quote />} />
             <Route path="/partners" element={<Partners />} />
+            <Route path="/facturas" element={<Facturas />} />
             <Route path="/rebates" element={<Rebates />} />
           </Routes>
         </div>
