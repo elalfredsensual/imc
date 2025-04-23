@@ -23,7 +23,10 @@ import pandas as pd
 
 import shlex
 
-
+# for rebates model
+from .models import Rebate
+from rest_framework.decorators import api_view
+from rest_framework import status
 
 
 # Configure logging
@@ -261,3 +264,73 @@ def get_last_10_partners(request):
     rows = [dict(row) for row in results]
 
     return JsonResponse(rows, safe=False)
+
+## AGREGAR AL FINAL 
+## rebates GET/POST
+@api_view(['GET'])
+def get_rebates_from_bigquery(request):
+    client = bigquery.Client()
+
+    query = """
+        SELECT fiscal_year, quarter, amount
+        FROM `imc-storage.imcData.rebates`
+        ORDER BY fiscal_year DESC, quarter
+    """
+    query_job = client.query(query)
+    results = query_job.result()
+    rows = [dict(row) for row in results]
+
+    return JsonResponse(rows, safe=False)
+
+
+@csrf_exempt
+@api_view(['POST'])
+def upsert_rebate_in_bigquery(request):
+    try:
+        data = json.loads(request.body)
+        fiscal_year = data.get("fiscal_year")
+        quarter = data.get("quarter")
+        amount = data.get("amount")
+
+        client = bigquery.Client()
+
+        query = f"""
+        MERGE `imc-storage.imcData.rebates` T
+        USING (SELECT '{fiscal_year}' AS fiscal_year, '{quarter}' AS quarter, {amount} AS amount) S
+        ON T.fiscal_year = S.fiscal_year AND T.quarter = S.quarter
+        WHEN MATCHED THEN UPDATE SET amount = S.amount
+        WHEN NOT MATCHED THEN INSERT (fiscal_year, quarter, amount) VALUES (S.fiscal_year, S.quarter, S.amount)
+        """
+        query_job = client.query(query)
+        query_job.result()
+
+        return JsonResponse({"status": "success"})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+
+@csrf_exempt
+@api_view(['POST'])
+def delete_rebate_in_bigquery(request):
+    try:
+        data = json.loads(request.body)
+        fiscal_year = data.get("fiscal_year")
+        quarter = data.get("quarter")
+
+        if not fiscal_year or not quarter:
+            return JsonResponse({"error": "Missing fiscal_year or quarter"}, status=400)
+
+        client = bigquery.Client()
+
+        query = f"""
+        DELETE FROM `imc-storage.imcData.rebates`
+        WHERE fiscal_year = '{fiscal_year}' AND quarter = '{quarter}'
+        """
+        query_job = client.query(query)
+        query_job.result()
+
+        return JsonResponse({"status": "deleted"})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)

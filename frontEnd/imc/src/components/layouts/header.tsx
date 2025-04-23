@@ -12,6 +12,11 @@ function Header() {
         <NavLink to="/partners" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
           Partners
         </NavLink>
+        ## SE AGREGA LO SIGUIENTE
+        <NavLink to="/rebates" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+          Rebates
+        </NavLink>
+        ## FIN DE AGREGADO
       </nav>
     </>
   );

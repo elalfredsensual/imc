@@ -35,29 +35,30 @@ const Last10Partners = () => {
   };
 
   return (
-    <div className="last-10-quotes">
-      <ToastContainer />
-      <h3 className="text-center my-4">Last 10 Partner Records</h3>
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>IMC PO</th>
-            <th>Partner PO</th>
-            <th>Monto Partner PO</th>
-          </tr>
-        </thead>
-        <tbody>
-          {partners.map((partner, index) => (
-            <tr key={index}>
-              <td>{partner.IMC_PO}</td>
-              <td>{partner.PARTNER_PO}</td>
-              <td>{formatCurrency(partner.MONTO_PARTNER_PO)}</td>
+      <div className="last-10-quotes">
+        <ToastContainer />
+        <h3 className="text-center my-4">Last 10 Partner Records</h3>
+        <Table className="pretty-table"> ## ESTA LINEA ES LA QUE SE ACTUALIZA
+          <thead>
+            <tr>
+              <th>IMC PO</th>
+              <th>Partner PO</th>
+              <th>Monto Partner PO</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
-    </div>
-  );
-};
-
-export default Last10Partners;
+          </thead>
+          <tbody>
+            {partners.map((partner, index) => (
+              <tr key={index}>
+                <td>{partner.IMC_PO}</td>
+                <td>{partner.PARTNER_PO}</td>
+                <td>{formatCurrency(partner.MONTO_PARTNER_PO)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </div>
+    );
+  };
+  
+  export default Last10Partners;
+  
