@@ -63,7 +63,7 @@ const RebatesForm: React.FC = () => {
     }
 
     try {
-      await axios.post('http://localhost:8000/api/rebates/update/', {
+      await axios.post('http://157.245.242.171/api/rebates/update/', {
         fiscal_year: selectedYear,
         quarter: selectedQuarter,
         amount,
@@ -90,7 +90,7 @@ const RebatesForm: React.FC = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.post('http://localhost:8000/api/rebates/delete/', {
+      await axios.post('http://157.245.242.171/api/rebates/delete/', {
         fiscal_year: selectedYear,
         quarter: selectedQuarter
       });
